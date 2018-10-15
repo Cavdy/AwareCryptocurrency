@@ -1,16 +1,30 @@
+import 'package:aware_cryptocurrency/data/crypto_data.dart';
+import 'package:aware_cryptocurrency/modules/crypto_presenter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  final List currencies;
-  HomePage(this.currencies);
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  List currencies;
+class _HomePageState extends State<HomePage> implements CryptoListViewContract {
+
+  CryptoListPresenter _presenter;
+
+  List<Crypto> _currencies;
   final List<MaterialColor> _colors = [Colors.pink, Colors.brown, Colors.red];
+
+  _HomePageState() {
+    _presenter = new CryptoListPresenter(this);
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _presenter.loadCurrencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +44,9 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           new Flexible(
               child: new ListView.builder(
-                  itemCount: widget.currencies.length,
+                  itemCount: _currencies.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final Map currency = widget.currencies[index];
+                    final Crypto currency = _currencies[index];
                     final MaterialColor color = _colors[index % _colors.length];
 
                     return _getListItemUI(currency, color);
@@ -43,7 +57,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // this is the @_getListItemUI
-  ListTile _getListItemUI(Map currency, MaterialColor color) {
+  ListTile _getListItemUI(Crypto currency, MaterialColor color) {
     return new ListTile(
       leading: new CircleAvatar(
         backgroundColor: color,
@@ -79,5 +93,18 @@ class _HomePageState extends State<HomePage> {
       text:
           new TextSpan(children: [priceTextWidget, percentageChangeTextWidget]),
     );
+  }
+
+  @override
+  void onLoadCryptoComplete(List<Crypto> items) {
+    // TODO: implement onLoadCryptoComplete
+    setState(() {
+      _currencies = items;
+    });
+  }
+
+  @override
+  void onLoadCryptoError() {
+    // TODO: implement onLoadCryptoError
   }
 }
