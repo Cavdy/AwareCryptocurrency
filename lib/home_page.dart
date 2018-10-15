@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List currencies;
-  final List<MaterialColor> _colors = [Colors.pink,Colors.green,Colors.red];
+  final List<MaterialColor> _colors = [Colors.pink,Colors.brown,Colors.red];
 
   @override
   void initState() async {
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // this is the cryptoWidget
+  // this is the @cryptoWidget
   Widget _cryptoWidget() {
     return new Container(
       child: new Flexible(
@@ -51,6 +51,29 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // this is the cryptoWidget
-  
+  // this is the @_getListItemUI
+  ListTile _getListItemUI(Map currency, MaterialColor color){
+    return new ListTile(
+      leading: new CircleAvatar(backgroundColor: color, child: new Text(currency['name'][0]),),
+      title: new Text(currency['name'], style: new TextStyle(fontWeight: FontWeight.bold),),
+      subtitle: _getSubtitleText(currency['price_usd'], currency['percent_change_1h']),
+    );
+  }
+
+  // this is the @_getSubtitleText
+  Widget _getSubtitleText(String priceUSD, String percentageChange) {
+    TextSpan priceTextWidget = new TextSpan(text: "\$$priceUSD\n", style: new TextStyle(color: Colors.black));
+    String percentageChangeText = "1 hour: $percentageChange%";
+    TextSpan percentageChangeTextWidget;
+
+    if(double.parse(percentageChange) > 0) {
+      percentageChangeTextWidget = new TextSpan(text: percentageChangeText, style: new TextStyle(color: Colors.green));
+    } else {
+      percentageChangeTextWidget = new TextSpan(text: percentageChangeText, style: new TextStyle(color: Colors.red));
+    }
+
+    return new RichText(
+
+    );
+  }
 }
