@@ -11,8 +11,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> implements CryptoListViewContract {
 
   CryptoListPresenter _presenter;
-
   List<Crypto> _currencies;
+  bool _isLoading;
   final List<MaterialColor> _colors = [Colors.pink, Colors.brown, Colors.red];
 
   _HomePageState() {
@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _isLoading = true;
     _presenter.loadCurrencies();
   }
 
@@ -33,7 +34,9 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
         title: new Text('Aware Cryptocurrency'),
         elevation: defaultTargetPlatform == TargetPlatform.iOS ? 0.0 : 5.0,
       ),
-      body: _cryptoWidget(),
+      body: _isLoading ? new Center(
+        child: new CircularProgressIndicator(),
+      ) : _cryptoWidget()
     );
   }
 
@@ -61,14 +64,14 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
     return new ListTile(
       leading: new CircleAvatar(
         backgroundColor: color,
-        child: new Text(currency['name'][0]),
+        child: new Text(currency.name[0]),
       ),
       title: new Text(
-        currency['name'],
+        currency.name,
         style: new TextStyle(fontWeight: FontWeight.bold),
       ),
       subtitle: _getSubtitleText(
-          currency['price_usd'], currency['percent_change_1h']),
+          currency.priceUsd, currency.percentChange1h),
       isThreeLine: true,
     );
   }
@@ -100,6 +103,7 @@ class _HomePageState extends State<HomePage> implements CryptoListViewContract {
     // TODO: implement onLoadCryptoComplete
     setState(() {
       _currencies = items;
+      _isLoading = false;
     });
   }
 
